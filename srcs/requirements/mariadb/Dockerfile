@@ -2,8 +2,7 @@ FROM debian:bookworm
 
 WORKDIR /mdb
 
-RUN apt update && apt install -y mariadb-server \
-    netcat-openbsd
+RUN apt update && apt install -y mariadb-server
 
 COPY tools/mariadb_script.sh mariadb_script.sh
 

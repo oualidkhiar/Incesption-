@@ -6,7 +6,6 @@ RUN apt-get update && apt-get install -y php \
     php8.2-fpm \
     mariadb-client \
     php8.2-mysql \
-    netcat-openbsd \
     curl
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \

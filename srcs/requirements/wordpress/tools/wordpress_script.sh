@@ -12,11 +12,16 @@ mkdir -p /var/www/html
 
 cd /var/www/html
 
-if [ ! -f /var/www/html/.wp_files_exist ]; then
+if [ ! -f .wp_files_exist ]; then
 
     wp core download --allow-root
 
-    until mariadb-admin ping --silent; do
+    until mariadb-admin \
+        --host=mariadb \
+        --user="${DATABASE_USER}" \
+        --password="${DB_PASS}" \
+        ping --silent
+    do
         sleep 1
     done
 
@@ -32,17 +37,20 @@ if [ ! -f /var/www/html/.wp_files_exist ]; then
         --title="my WordPress site test" \
         --admin_user="${ADMIN_NAME}" \
         --admin_password="${ADMIN_PASS}" \
-        --admin_email="owner@owner.com" \
+        --admin_email="${ADMIN_EMAIL}" \
         --allow-root
 
-    wp user create \
-        "${USER_NAME}" \
-        "${USER_EMAIL}" \
-        --role=author \
-        --user_pass="${USER_PASS}" \
-        --allow-root
+    if ! wp user get "$USER_NAME" --allow-root >/dev/null 2>&1; then
+        wp user create \
+            "${USER_NAME}" \
+            "${USER_EMAIL}" \
+            --role=author \
+            --user_pass="${USER_PASS}" \
+            --allow-root
+    fi
 
     touch .wp_files_exist
+
     chown -R www-data:www-data /var/www/html
 
 fi

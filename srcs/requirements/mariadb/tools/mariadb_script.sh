@@ -2,10 +2,6 @@
 
 set -e
 
-send_queries() {
-    mariadb -u root -e "${QUERIES}"
-}
-
 mkdir -p /var/lib/mysql /run/mysqld
 chown -R mysql:mysql /var/lib/mysql /run/mysqld
 
@@ -26,7 +22,7 @@ if [ ! -d /var/lib/mysql/"${DATABASE_NAME}" ]; then
     ALTER USER 'root'@'localhost' IDENTIFIED BY '"${DATABASE_ROOT_PASS}"';
     FLUSH PRIVILEGES;"
 
-    send_queries
+    mariadb -u root -e "${QUERIES}"
 
     mariadb-admin -u root -p"${DATABASE_ROOT_PASS}" shutdown
 
